@@ -1,4 +1,5 @@
-mkdir checkpoint
+# mkdir checkpoint
+# ln -s /path/to/ss_d3  data/ss_d3
 #Baseline
 CUDA_VISIBLE_DEVICES=0 python class_incremental_imagenet.py \
     --nb_cl_fg 16 --nb_cl 5 --nb_protos 20 \

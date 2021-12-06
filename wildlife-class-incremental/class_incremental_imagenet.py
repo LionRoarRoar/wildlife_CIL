@@ -44,7 +44,7 @@ parser.add_argument('--nb_runs', default=1, type=int, \
     help='Number of runs (random ordering of classes at each run)')
 parser.add_argument('--ckp_prefix', default=os.path.basename(sys.argv[0])[:-3], type=str, \
     help='Checkpoint prefix')
-parser.add_argument('--epochs', default=90, type=int, \
+parser.add_argument('--epochs', default=54, type=int, \
     help='Epochs')
 parser.add_argument('--T', default=2, type=float, \
     help='Temporature for distialltion')
@@ -56,18 +56,18 @@ parser.add_argument('--fix_budget', action='store_true', \
     help='fix budget')
 parser.add_argument('--rs_ratio', default=0, type=float, \
     help='The ratio for resample')
-parser.add_argument('--random_seed', default=1993, type=int, \
+parser.add_argument('--random_seed', default=1998, type=int, \
     help='random seed')
 args = parser.parse_args()
 
 ########################################
-assert(args.nb_cl_fg % args.nb_cl == 0)
+# assert(args.nb_cl_fg % args.nb_cl == 0)
 assert(args.nb_cl_fg >= args.nb_cl)
 train_batch_size       = 128            # Batch size for train
 test_batch_size        = 50             # Batch size for test
 eval_batch_size        = 128            # Batch size for eval
-base_lr                = 0.1            # Initial learning rate
-lr_strat               = [30, 60]       # Epochs where learning rate gets decreased
+base_lr                = 0.03            # Initial learning rate
+lr_strat               = [42, 50]       # Epochs where learning rate gets decreased
 lr_factor              = 0.1            # Learning rate decrease factor
 custom_weight_decay    = 1e-4           # Weight Decay
 custom_momentum        = 0.9            # Momentum
@@ -161,7 +161,8 @@ for iteration_total in range(args.nb_runs):
             ############################################################
             last_iter = 0
             ############################################################
-            tg_model = models.resnet18(num_classes=args.nb_cl_fg)
+            tg_model = models.resnet18(pretrained=True)
+            tg_model.fc = torch.nn.Linear(num_classes=args.nb_cl_fg)
             ref_model = None
         else:
             ############################################################
